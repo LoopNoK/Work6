@@ -9,13 +9,13 @@ namespace Work6
 {
     internal class Program
     {
-        static void DirectoryWrite()
+        static void DirectoryWrite(string path)
         {
-            using (StreamWriter dirEmployees = new StreamWriter("Directory.txt", true , Encoding.Default))
+            using (StreamWriter dirEmployees = new StreamWriter(path, true, Encoding.Default))
             {
                 string dir = string.Empty;
                 Console.Write("Номер записи: ");
-                dir += $"{Console.ReadLine()}" + "#";
+                dir += $"{Int16.Parse(Console.ReadLine())}" + "#";
 
                 DateTime time = DateTime.Now;
                 Console.WriteLine($"Время записи: {time}");
@@ -28,24 +28,21 @@ namespace Work6
                 DateTime birthdate = Convert.ToDateTime(Console.ReadLine());
                 dir += $"{birthdate}" + "#";
 
-                Console.Write("Возраст сотрудника: ");
-                var age = time.Year - birthdate.Year;
-                Console.Write(age);
+                int age = time.Year - birthdate.Year;
+                Console.Write($"Возраст сотрудника: {age} ");
                 dir += $"{age}" + "#";
 
                 Console.Write("\nРост сотрудника: ");
-                dir += $"{Console.ReadLine()}" + "#";
+                dir += $"{Int16.Parse(Console.ReadLine())}" + "#";
 
                 Console.Write("Место рождения сотрудника: ");
                 dir += $"{Console.ReadLine()}" + "#";
                 dirEmployees.WriteLine(dir);
-
-
             }
         }
-        static void DirectoryRead()
+        static void DirectoryRead(string path)
         {
-            using (StreamReader rEmp = new StreamReader("Directory.txt", Encoding.Default))
+            using (StreamReader rEmp = new StreamReader(path, Encoding.Default))
             {
                 string line;
                 string[] parts = { };
@@ -58,24 +55,38 @@ namespace Work6
                 }
             }
         }
+        static string GetFile()
+        {
+            string path = @"C:\Work6\Directory.txt";
+
+            FileStream fileStream = null;
+
+            if (!File.Exists(path))
+            {
+                fileStream = File.Open(path, FileMode.OpenOrCreate);
+            }
+            return path;
+        }
         static void Main(string[] args)
         {
 
             Console.WriteLine("Выберите вариант:");
-            Console.WriteLine("1. Добавить данные нового сотрудника");
-            Console.WriteLine("2. Просмотреть данные всех сотрудников");
-            if ('1' == char.ToUpper(Console.ReadKey().KeyChar))
+
+            while (true)
             {
-                DirectoryWrite();
+                Console.WriteLine("\n1. Добавить данные нового сотрудника");
+                Console.WriteLine("2. Просмотреть данные всех сотрудников");
+                Console.WriteLine("Нажмите любую кнопку, чтобы выйти");
+
+                char numsel = Convert.ToChar(Console.ReadLine());
+                switch (numsel)
+                {
+                    case '1': DirectoryWrite(GetFile()); continue;
+                    case '2': DirectoryRead(GetFile()); continue;
+                    default: break;
+                }
+                break;
             }
-            else 
-            {
-                DirectoryRead();
-            }
-            Console.ReadKey();
-
-
-
         }
     }
 }
